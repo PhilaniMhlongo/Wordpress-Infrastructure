@@ -28,3 +28,74 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
+
+  RTPub:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: NjomaneIndustries-vpc-rt-pub
+
+  RTPubDefaultIPv4:
+    Type: "AWS::EC2::Route"
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      RouteTableId:
+        Ref: RTPub
+      DestinationCidrBlock: "0.0.0.0/0"
+
+      GatewayId:
+        Ref: InternetGateway
+
+  RTPubDefaultIPv6:
+    Type: "AWS::EC2::Route"
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      RouteTableId:
+        Ref: RTPub
+      DestinationIpv6CidrBlock: "::/0"
+      GatewayId:
+        Ref: InternetGateway
+
+  RTAssociationPubA:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref SNPUBA
+      RouteTableId:
+        Ref: RTPub
+
+  RTAssociationPubB:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref SNPUBB
+      RouteTableId:
+        Ref: RTPub
+
+  RTAssociationPubC:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref SNPUBC
+      RouteTableId:
+        Ref: RTPub
+
+  SNDBA:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: 10.16.16.0/20
+      AssignIp6AddresssOnCreation: true
+      Ipv6CidrBlock:
+        Fn::Sub:
+          - "${VpcPart}${SubnetPart}"
+          - SubnetPart: "01::/64"
+            VpcPart:
+              !Select [
+                0,
+                !Select ["00::/56", !Select [0, !GetAtt VPC.Ipv6CidrBlocks]],
+              ]
+      Tags:
+        - Key: Name
+          Value: sn-db-A
