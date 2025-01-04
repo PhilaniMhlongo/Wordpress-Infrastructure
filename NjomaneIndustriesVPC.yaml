@@ -347,4 +347,62 @@ Resources:
           IpProtocol: tcp
           FromPort: "80"
           ToPort: "80"
+          CidrIp: "0.0.0.0/0"git log
+
+
+
+  SGDatabase:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Control access to Database
+      SecurityGroupIngress:
+        - Description: "Allow MySQL IN"
+          IpProtocol: tcp
+          FromPort: "3306"
+          ToPort: "3306"
+          SourceSecurityGroupId: !Ref SGWordpress
+  SGLoadBalancer:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Control access to Load Balancer
+      SecurityGroupIngress:
+        - Description: "Allow HTTP IPv4 IN"
+          IpProtocol: tcp
+          FromPort: "80"
+          ToPort: "80"
           CidrIp: "0.0.0.0/0"
+  SGEFS:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Control access to EFS
+      SecurityGroupIngress:
+        - Description: "Allow NFS/EFS IPv4 IN"
+          IpProtocol: tcp
+          FromPort: "2049"
+          ToPort: "2049"
+          SourceSecurityGroupId: !Ref SGWordpress
+  WordpressRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess
+  WordpressInstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Path: /
+      Roles:
+        - !Ref WordpressRole
