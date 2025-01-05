@@ -347,7 +347,7 @@ Resources:
           IpProtocol: tcp
           FromPort: "80"
           ToPort: "80"
-          CidrIp: "0.0.0.0/0"git log
+          CidrIp: "0.0.0.0/0"
 
 
 
@@ -406,3 +406,95 @@ Resources:
       Path: /
       Roles:
         - !Ref WordpressRole
+
+
+Outputs:
+  VPC:
+    Description: VPC ID
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VPC"
+
+  SGWordpress:
+    Description: WordPress Security Group
+    Value: !Ref SGWordpress
+    Export:
+      Name: !Sub "${AWS::StackName}-SGWordpress"
+
+  SGDatabase:
+    Description: Database Security Group
+    Value: !Ref SGDatabase
+    Export:
+      Name: !Sub "${AWS::StackName}-SGDatabase"
+
+  SGLoadBalancer:
+    Description: Load Balancer Security Group
+    Value: !Ref SGLoadBalancer
+    Export:
+      Name: !Sub "${AWS::StackName}-SGLoadBalancer"
+
+  WordpressInstanceProfile:
+    Description: WordPress Instance Profile
+    Value: !Ref WordpressInstanceProfile
+    Export:
+      Name: !Sub "${AWS::StackName}-WordpressInstanceProfile"
+
+  SNDBA:
+    Description: Database Subnet A
+    Value: !Ref SNDBA
+    Export:
+      Name: !Sub "${AWS::StackName}-SNDBA"
+
+  SNDBB:
+    Description: Database Subnet B
+    Value: !Ref SNDBB
+    Export:
+      Name: !Sub "${AWS::StackName}-SNDBB"
+
+  SNDBC:
+    Description: Database Subnet C
+    Value: !Ref SNDBC
+    Export:
+      Name: !Sub "${AWS::StackName}-SNDBC"
+
+  SNAPPA:
+    Description: Application Subnet A
+    Value: !Ref SNAPPA
+    Export:
+      Name: !Sub "${AWS::StackName}-SNAPPA"
+
+  SNAPPB:
+    Description: Application Subnet B
+    Value: !Ref SNAPPB
+    Export:
+      Name: !Sub "${AWS::StackName}-SNAPPB"
+
+  SNAPPC:
+    Description: Application Subnet C
+    Value: !Ref SNAPPC
+    Export:
+      Name: !Sub "${AWS::StackName}-SNAPPC"
+
+  SNPUBA:
+    Description: Public Subnet A
+    Value: !Ref SNPUBA
+    Export:
+      Name: !Sub "${AWS::StackName}-SNPUBA"
+
+  SNPUBB:
+    Description: Public Subnet B
+    Value: !Ref SNPUBB
+    Export:
+      Name: !Sub "${AWS::StackName}-SNPUBB"
+
+  SNPUBC:
+    Description: Public Subnet C
+    Value: !Ref SNPUBC
+    Export:
+      Name: !Sub "${AWS::StackName}-SNPUBC"
+
+  SGEFS:
+    Description: EFS Security Group
+    Value: !Ref SGEFS
+    Export:
+      Name: !Sub "${AWS::StackName}-SGEFS"
