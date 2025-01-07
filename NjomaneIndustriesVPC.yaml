@@ -9,26 +9,22 @@ Resources:
       Tags:
         - Key: Name
           Value: NjomaneIndustriesVPC
-
   IPv6CidrBlock:
     Type: AWS::EC2::VPCCidrBlock
     Properties:
       VpcId: !Ref VPC
       AmazonProvidedIpv6CidrBlock: true
-
   InternetGateway:
     Type: "AWS::EC2::InternetGateway"
     Properties:
       Tags:
         - Key: Name
           Value: NjomaneIndustries-IGW
-
   InternetGatewayAttachment:
     Type: "AWS::EC2::VPCGatewayAttachment"
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
-
   RTPub:
     Type: "AWS::EC2::RouteTable"
     Properties:
@@ -36,7 +32,6 @@ Resources:
       Tags:
         - Key: Name
           Value: NjomaneIndustries-vpc-rt-pub
-
   RTPubDefaultIPv4:
     Type: "AWS::EC2::Route"
     DependsOn: InternetGatewayAttachment
@@ -44,10 +39,8 @@ Resources:
       RouteTableId:
         Ref: RTPub
       DestinationCidrBlock: "0.0.0.0/0"
-
       GatewayId:
         Ref: InternetGateway
-
   RTPubDefaultIPv6:
     Type: "AWS::EC2::Route"
     DependsOn: InternetGatewayAttachment
@@ -57,28 +50,24 @@ Resources:
       DestinationIpv6CidrBlock: "::/0"
       GatewayId:
         Ref: InternetGateway
-
   RTAssociationPubA:
     Type: "AWS::EC2::SubnetRouteTableAssociation"
     Properties:
       SubnetId: !Ref SNPUBA
       RouteTableId:
         Ref: RTPub
-
   RTAssociationPubB:
     Type: "AWS::EC2::SubnetRouteTableAssociation"
     Properties:
       SubnetId: !Ref SNPUBB
       RouteTableId:
         Ref: RTPub
-
   RTAssociationPubC:
     Type: "AWS::EC2::SubnetRouteTableAssociation"
     Properties:
       SubnetId: !Ref SNPUBC
       RouteTableId:
         Ref: RTPub
-
   SNDBA:
     Type: AWS::EC2::Subnet
     DependsOn: IPv6CidrBlock
@@ -86,7 +75,7 @@ Resources:
       VpcId: !Ref VPC
       AvailabilityZone: !Select [0, !GetAZs ""]
       CidrBlock: 10.16.16.0/20
-      AssignIp6AddresssOnCreation: true
+      AssignIpv6AddressOnCreation: true
       Ipv6CidrBlock:
         Fn::Sub:
           - "${VpcPart}${SubnetPart}"
@@ -94,12 +83,11 @@ Resources:
             VpcPart:
               !Select [
                 0,
-                !Select ["00::/56", !Select [0, !GetAtt VPC.Ipv6CidrBlocks]],
+                !Split ["00::/56", !Select [0, !GetAtt VPC.Ipv6CidrBlocks]],
               ]
       Tags:
         - Key: Name
           Value: sn-db-A
-
   SNDBB:
     Type: AWS::EC2::Subnet
     DependsOn: IPv6CidrBlock
@@ -140,8 +128,7 @@ Resources:
       Tags:
         - Key: Name
           Value: sn-db-C
-
-   SNAPPA:
+  SNAPPA:
     Type: AWS::EC2::Subnet
     DependsOn: IPv6CidrBlock
     Properties:
@@ -261,8 +248,6 @@ Resources:
       Tags:
         - Key: Name
           Value: sn-pub-C
-
-
   IPv6WorkaroundSubnetPUBA:
     Type: Custom::SubnetModify
     Properties:
@@ -348,9 +333,6 @@ Resources:
           FromPort: "80"
           ToPort: "80"
           CidrIp: "0.0.0.0/0"
-
-
-
   SGDatabase:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
@@ -406,8 +388,6 @@ Resources:
       Path: /
       Roles:
         - !Ref WordpressRole
-
-
 Outputs:
   VPC:
     Description: VPC ID
