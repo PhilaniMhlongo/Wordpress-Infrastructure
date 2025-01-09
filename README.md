@@ -1,6 +1,7 @@
 # WordPress AWS Infrastructure Deployment
 
 This guide outlines how to deploy a highly available WordPress infrastructure using AWS CloudFormation. The infrastructure includes a multi-tier VPC, EC2 instances for WordPress, RDS for the database, EFS for shared storage, and an ALB for load balancing.
+![Wordpress_Architecture](images/Architecture.png)
 
 ---
 
