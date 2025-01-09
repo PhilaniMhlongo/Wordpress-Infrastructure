@@ -10,6 +10,8 @@ Parameters:
     NoEcho: true
     MinLength: 8
     Description: Password for WordPress database
+    AllowedPattern: "[A-Za-z0-9!#$%^&*()_+={};:<>,.?~-]*"
+    ConstraintDescription: 'Must contain only ASCII characters. Cannot contain forward slash (/), at symbol (@), double quote ("), or spaces.'
   DBRootPassword:
     Type: String
     NoEcho: true

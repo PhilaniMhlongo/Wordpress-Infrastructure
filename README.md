@@ -51,10 +51,10 @@ Once the VPC is successfully deployed, deploy the WordPress infrastructure:
 ```bash
 aws cloudformation create-stack \
   --stack-name Infrastructure \
-  --template-body file://Infrastructure.yml \
+  --template-body file://Infrastructure.yaml \
   --parameters \
-    ParameterKey=DBPassword,ParameterValue=Philani@Wethinkcode023 \
-    ParameterKey=DBRootPassword,ParameterValue=Philani@Wethinkcode023 \
+    ParameterKey=DBPassword,ParameterValue=Philani#Wethinkcode023 \
+    ParameterKey=DBRootPassword,ParameterValue=Philani#Wethinkcode023 \
   --capabilities CAPABILITY_IAM \
   --profile iamadmin-philani
 ```
